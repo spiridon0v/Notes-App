@@ -1,17 +1,17 @@
 /* eslint-disable react/no-unstable-nested-components */
-import {Text, ScrollView, BackHandler} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {Text, ScrollView, BackHandler} from 'react-native';
 import {useMMKVStorage} from 'react-native-mmkv-storage';
 import {Note, Notes} from '../../types/note.type';
+import {Props} from '../../types/props.type';
 import {storage} from '../../src/storage';
 import {vibration} from '../../src/vibration';
-import {Props} from '../../types/props.type';
 import {colors} from '../../src/colors';
 import PlusButton from '../../components/PlusButton';
 import NoteItem from '../../components/NoteItem';
-import {styles} from './styles';
 import DeleteButton from '../../components/DeleteButton';
 import CancelButton from '../../components/CancelButton';
+import {styles} from './styles';
 
 export default function NotesScreen({navigation}: Props<'Notes'>) {
   const [notes, setNotes] = useMMKVStorage<Notes>('notes', storage, []);
@@ -26,30 +26,32 @@ export default function NotesScreen({navigation}: Props<'Notes'>) {
     });
   };
 
-  const cancelDeleting = () => {
-    vibration();
+  const cancelDeleting = (isBackPress: boolean) => {
+    !isBackPress && vibration();
     setIsDeleting(false);
     setDeleteList([]);
-    const newNotes = notes.map(note => ({...note, state: false}));
-    setNotes(newNotes);
+    setNotes(notes.map(note => ({...note, state: false})));
   };
 
   const deleteNotes = () => {
     vibration();
     setIsDeleting(false);
-    setNotes(notes.filter(note => !deleteList.includes(note.date)));
     setDeleteList([]);
+    setNotes(notes.filter(note => !deleteList.includes(note.date)));
   };
 
-  const onPress = (note: Note) => {
+  const onDeleteButtonPress = () => deleteNotes();
+  const onCancelButtonPress = () => cancelDeleting(false);
+
+  const onNoteItemPress = (note: Note) => {
     if (isDeleting) {
-      onCheck(note);
+      onNoteItemCheck(note);
     } else {
       navigation.navigate('AddNote', {isNew: false, note: note, notes: notes});
     }
   };
 
-  const onLongPress = (note: Note) => {
+  const onNoteItemLongPress = (note: Note) => {
     if (!isDeleting) {
       vibration();
       setIsDeleting(true);
@@ -58,7 +60,7 @@ export default function NotesScreen({navigation}: Props<'Notes'>) {
     }
   };
 
-  const onCheck = (note: Note) => {
+  const onNoteItemCheck = (note: Note) => {
     vibration();
     if (note.state) {
       setDeleteList(deleteList.filter(date => date !== note.date));
@@ -71,7 +73,7 @@ export default function NotesScreen({navigation}: Props<'Notes'>) {
   useEffect(() => {
     const backAction = () => {
       if (isDeleting) {
-        cancelDeleting();
+        cancelDeleting(true);
         return true;
       }
       return false;
@@ -88,10 +90,10 @@ export default function NotesScreen({navigation}: Props<'Notes'>) {
   useEffect(() =>
     navigation.setOptions({
       headerLeft: () => (
-        <CancelButton show={isDeleting} onPress={cancelDeleting} />
+        <CancelButton show={isDeleting} onPress={onCancelButtonPress} />
       ),
       headerRight: () => (
-        <DeleteButton show={isDeleting} onPress={deleteNotes} />
+        <DeleteButton show={isDeleting} onPress={onDeleteButtonPress} />
       ),
     }),
   );
@@ -101,14 +103,15 @@ export default function NotesScreen({navigation}: Props<'Notes'>) {
       {notes.length === 0 && <Text style={{color: colors.gray}}>Пусто</Text>}
       <ScrollView
         style={styles.ScrollView}
-        contentContainerStyle={styles.ContentContainer}>
+        contentContainerStyle={styles.ContentContainer}
+        showsVerticalScrollIndicator={false}>
         {notes.map(note => (
           <NoteItem
             key={note.date}
             note={note}
             isDeleting={isDeleting}
-            onPress={() => onPress(note)}
-            onLongPress={() => onLongPress(note)}
+            onPress={() => onNoteItemPress(note)}
+            onLongPress={() => onNoteItemLongPress(note)}
           />
         ))}
       </ScrollView>

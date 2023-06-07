@@ -8,5 +8,6 @@ export const styles = StyleSheet.create({
   },
   ContentContainer: {
     alignItems: 'center',
+    height: '105%',
   },
 });

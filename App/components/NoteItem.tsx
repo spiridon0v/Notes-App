@@ -4,8 +4,9 @@ import {Note} from '../types/note.type';
 import Animated, {
   FadeIn,
   FadeOut,
-  Layout,
   LightSpeedOutRight,
+  SequencedTransition,
+  StretchInY,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -41,9 +42,9 @@ export default function NoteItem({
 
   return (
     <Animated.View
-      entering={FadeIn}
+      entering={StretchInY}
       exiting={LightSpeedOutRight}
-      layout={Layout.springify()}
+      layout={SequencedTransition}
       style={[styles.NoteItem, animatedStyle]}>
       <Pressable
         style={styles.Pressable}

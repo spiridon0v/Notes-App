@@ -1,27 +1,34 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
+import React, {useLayoutEffect, useState} from 'react';
 import {View, Text, TextInput, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {Props} from '../../types/props.type';
-import {styles} from './styles';
+import {Note} from '../../types/note.type';
 import BackArrowButton from '../../components/BackArrowButton';
 import SaveButton from '../../components/SaveButton';
 import {storage} from '../../src/storage';
 import {vibration} from '../../src/vibration';
-import {Note} from '../../types/note.type';
+import {styles} from './styles';
 
 export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
   let {note, notes, isNew} = route.params;
 
-  const [title, setTitle] = useState<string>(note?.title || '');
-  const [text, setText] = useState<string>(note?.text || '');
+  const [title, onChangeTitle] = useState<string>('');
+  const [text, onChangeText] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
+  const [screenIsFocused, setScreenIsFocused] = useState<boolean>(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <BackArrowButton onPress={() => navigation.goBack()} />,
       headerRight: () => <SaveButton onPress={saveNote} />,
     });
-  });
+    if (!screenIsFocused && note) {
+      onChangeTitle(note.title);
+      onChangeText(note.text);
+      setScreenIsFocused(true);
+    }
+  }, [title, text]);
 
   const saveNote = () => {
     vibration();
@@ -52,7 +59,7 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
       <TextInput
         autoFocus={isNew}
         value={title}
-        onChangeText={t => setTitle(t)}
+        onChangeText={onChangeTitle}
         style={styles.TitleInput}
         placeholder="Заголовок"
         onFocus={onFocus}
@@ -62,10 +69,10 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
           <Text style={styles.Error}>Введите заголовок</Text>
         </View>
       )}
-      <ScrollView style={styles.ScrollView}>
+      <ScrollView style={styles.ScrollView} indicatorStyle="black">
         <TextInput
           value={text}
-          onChangeText={t => setText(t)}
+          onChangeText={onChangeText}
           style={styles.TextInput}
           placeholder="Текст"
           multiline
