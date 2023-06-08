@@ -1,7 +1,8 @@
 import React from 'react';
-import Animated, {StretchInY, StretchOutY} from 'react-native-reanimated';
-import {Pressable, StyleSheet} from 'react-native';
+import {StretchInY, StretchOutY} from 'react-native-reanimated';
+import {StyleSheet} from 'react-native';
 import CancelIcon from '../svg/CancelIcon';
+import {AnimatedPressable} from '../src/AnimatedPressable';
 
 interface Props {
   show: boolean;
@@ -10,26 +11,22 @@ interface Props {
 
 export default function CancelButton({show, onPress}: Props) {
   return show ? (
-    <Animated.View
+    <AnimatedPressable
       entering={StretchInY}
       exiting={StretchOutY}
-      style={styles.View}>
-      <Pressable style={styles.Pressable} onPress={onPress}>
-        <CancelIcon />
-      </Pressable>
-    </Animated.View>
+      style={styles.Pressable}
+      onPress={onPress}>
+      <CancelIcon />
+    </AnimatedPressable>
   ) : null;
 }
 
 const styles = StyleSheet.create({
-  View: {
+  Pressable: {
     height: 40,
     width: 40,
     position: 'absolute',
     left: 5,
-  },
-  Pressable: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

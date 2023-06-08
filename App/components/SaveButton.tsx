@@ -1,27 +1,57 @@
-import {Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
-import {colors} from '../src/colors';
+import SaveIcon from '../svg/SaveIcon';
+import {AnimatedPressable} from '../src/AnimatedPressable';
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface Props {
   onPress: () => void;
 }
 
 export default function SaveButton({onPress}: Props) {
+  const backgroundColor = useSharedValue('transparent');
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: backgroundColor.value,
+    };
+  });
+
+  const startAnimation = () => {
+    backgroundColor.value = withTiming('rgba(128, 128, 128, 0.2)', {
+      duration: 300,
+    });
+  };
+
+  const endAnimation = () => {
+    backgroundColor.value = withTiming('transparent)', {
+      duration: 300,
+    });
+  };
+
   return (
-    <TouchableOpacity onPress={onPress} style={styles.Touchable}>
-      <Text style={styles.Text}>Сохранить</Text>
-    </TouchableOpacity>
+    <AnimatedPressable
+      onPressIn={startAnimation}
+      onPressOut={endAnimation}
+      onPress={onPress}
+      style={[styles.Pressable, animatedStyle]}>
+      <SaveIcon />
+    </AnimatedPressable>
   );
 }
 
 const styles = StyleSheet.create({
-  Touchable: {
+  Pressable: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 30,
-    width: 70,
-  },
-  Text: {
-    color: colors.gray,
+    height: 40,
+    width: 40,
+    position: 'absolute',
+    right: 5,
+    borderRadius: 20,
   },
 });
