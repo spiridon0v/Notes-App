@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useLayoutEffect, useState} from 'react';
-import {View, Text, TextInput, ScrollView} from 'react-native';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {View, Text, TextInput, ScrollView, Keyboard} from 'react-native';
 import {Props} from '../../types/props.type';
 import {Note} from '../../types/note.type';
 import BackArrowButton from '../../components/BackArrowButton';
@@ -17,6 +17,8 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
   const [text, onChangeText] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const [screenIsFocused, setScreenIsFocused] = useState<boolean>(false);
+  const [numberOfLines, setNumberOfLines] = useState<number>(1);
+  const textInputRef = useRef<TextInput>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -28,7 +30,18 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
       onChangeText(note.text);
       setScreenIsFocused(true);
     }
+    setNumberOfLines(text.split('\n').length + 25);
   }, [title, text]);
+
+  useEffect(() => {
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      textInputRef.current?.blur();
+    });
+
+    return () => {
+      hideSubscription.remove();
+    };
+  }, []);
 
   const saveNote = () => {
     vibration();
@@ -71,12 +84,13 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
       )}
       <ScrollView style={styles.ScrollView} indicatorStyle="black">
         <TextInput
+          ref={textInputRef}
           value={text}
           onChangeText={onChangeText}
           style={styles.TextInput}
           placeholder="Текст"
           multiline
-          numberOfLines={100}
+          numberOfLines={numberOfLines}
           textAlignVertical="top"
           onFocus={onFocus}
         />

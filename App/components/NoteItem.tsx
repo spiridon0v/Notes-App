@@ -3,10 +3,10 @@ import React from 'react';
 import {Note} from '../types/note.type';
 import Animated, {
   FadeIn,
+  FadeInUp,
   FadeOut,
-  LightSpeedOutRight,
+  FadeOutUp,
   SequencedTransition,
-  StretchInY,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -42,8 +42,8 @@ export default function NoteItem({
 
   return (
     <Animated.View
-      entering={StretchInY}
-      exiting={LightSpeedOutRight}
+      entering={FadeInUp}
+      exiting={FadeOutUp}
       layout={SequencedTransition}
       style={[styles.NoteItem, animatedStyle]}>
       <Pressable
