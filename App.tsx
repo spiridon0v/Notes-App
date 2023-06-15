@@ -22,6 +22,7 @@ function App() {
             headerStyle: {backgroundColor: colors.background},
             headerTintColor: '#fff',
             headerTitleAlign: 'center',
+            headerBackVisible: false,
           }}>
           <RootStack.Screen
             name="Notes"

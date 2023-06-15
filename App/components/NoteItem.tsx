@@ -5,8 +5,8 @@ import Animated, {
   FadeIn,
   FadeInUp,
   FadeOut,
-  FadeOutUp,
   SequencedTransition,
+  SlideOutRight,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -43,7 +43,7 @@ export default function NoteItem({
   return (
     <Animated.View
       entering={FadeInUp}
-      exiting={FadeOutUp}
+      exiting={SlideOutRight}
       layout={SequencedTransition}
       style={[styles.NoteItem, animatedStyle]}>
       <Pressable

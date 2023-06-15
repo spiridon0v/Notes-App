@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {View, Text, TextInput, ScrollView, Keyboard} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {TextInput, ScrollView, Keyboard, ToastAndroid} from 'react-native';
 import {Props} from '../../types/props.type';
 import {Note} from '../../types/note.type';
 import BackArrowButton from '../../components/BackArrowButton';
@@ -13,21 +13,20 @@ import {styles} from './styles';
 export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
   let {note, notes, isNew} = route.params;
 
-  const [title, onChangeTitle] = useState<string>('');
-  const [text, onChangeText] = useState<string>('');
-  const [error, setError] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>('');
+  const [text, setText] = useState<string>('');
   const [screenIsFocused, setScreenIsFocused] = useState<boolean>(false);
   const [numberOfLines, setNumberOfLines] = useState<number>(1);
   const textInputRef = useRef<TextInput>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <BackArrowButton onPress={() => navigation.goBack()} />,
       headerRight: () => <SaveButton onPress={saveNote} />,
     });
     if (!screenIsFocused && note) {
-      onChangeTitle(note.title);
-      onChangeText(note.text);
+      setTitle(note.title);
+      setText(note.text);
       setScreenIsFocused(true);
     }
     setNumberOfLines(text.split('\n').length + 25);
@@ -59,12 +58,12 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
       storage.setArray('notes', [newNote, ...notes]);
       navigation.goBack();
     } else {
-      setError(true);
+      ToastAndroid.showWithGravity(
+        'Введите заголовок!',
+        900,
+        ToastAndroid.BOTTOM,
+      );
     }
-  };
-
-  const onFocus = () => {
-    setError(false);
   };
 
   return (
@@ -72,27 +71,21 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
       <TextInput
         autoFocus={isNew}
         value={title}
-        onChangeText={onChangeTitle}
+        onChangeText={setTitle}
         style={styles.TitleInput}
         placeholder="Заголовок"
-        onFocus={onFocus}
+        maxLength={28}
       />
-      {error && (
-        <View style={styles.ErrorView}>
-          <Text style={styles.Error}>Введите заголовок</Text>
-        </View>
-      )}
-      <ScrollView style={styles.ScrollView} indicatorStyle="black">
+      <ScrollView style={styles.ScrollView}>
         <TextInput
           ref={textInputRef}
           value={text}
-          onChangeText={onChangeText}
+          onChangeText={setText}
           style={styles.TextInput}
           placeholder="Текст"
           multiline
           numberOfLines={numberOfLines}
           textAlignVertical="top"
-          onFocus={onFocus}
         />
       </ScrollView>
     </>

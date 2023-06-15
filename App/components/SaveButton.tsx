@@ -23,13 +23,13 @@ export default function SaveButton({onPress}: Props) {
 
   const startAnimation = () => {
     backgroundColor.value = withTiming('rgba(128, 128, 128, 0.2)', {
-      duration: 300,
+      duration: 200,
     });
   };
 
   const endAnimation = () => {
     backgroundColor.value = withTiming('transparent)', {
-      duration: 300,
+      duration: 200,
     });
   };
 
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     position: 'absolute',
-    right: 5,
+    right: 0,
     borderRadius: 20,
   },
 });
