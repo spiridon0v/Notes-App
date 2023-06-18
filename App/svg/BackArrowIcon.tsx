@@ -7,7 +7,7 @@ interface Props {
   color?: string;
 }
 
-const BackArrowIcon = ({size = 30, color = colors.gray}: Props) => (
+const BackArrowIcon = ({size = 30, color = colors.fourth}: Props) => (
   <Svg viewBox="0 0 24 24" height={size} width={size} fill={color}>
     <G data-name="Layer 2">
       <Path

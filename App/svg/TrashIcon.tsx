@@ -7,7 +7,7 @@ interface Props {
   color?: string;
 }
 
-const TrashIcon: FC<Props> = ({size = 25, color = colors.gray}) => {
+const TrashIcon: FC<Props> = ({size = 25, color = colors.fourth}) => {
   return (
     <Svg viewBox="0 0 24 24" height={size} width={size} fill={color}>
       <G data-name="Layer 2">

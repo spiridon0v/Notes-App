@@ -66,6 +66,17 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
     }
   };
 
+  const handleTextChange = (inputText: string) => {
+    const unicodeRegex = /\\u([\d\w]{4})/gi;
+    const decodedText = inputText.replace(
+      unicodeRegex,
+      (match: any, group: string) => {
+        return String.fromCharCode(parseInt(group, 16));
+      },
+    );
+    setText(decodedText);
+  };
+
   return (
     <>
       <TextInput
@@ -75,16 +86,19 @@ export default function AddNoteScreen({route, navigation}: Props<'AddNote'>) {
         style={styles.TitleInput}
         placeholder="Заголовок"
         maxLength={28}
+        spellCheck={false}
       />
+
       <ScrollView style={styles.ScrollView}>
         <TextInput
           ref={textInputRef}
           value={text}
-          onChangeText={setText}
+          onChangeText={handleTextChange}
           style={styles.TextInput}
           placeholder="Текст"
           multiline
           numberOfLines={numberOfLines}
+          spellCheck={false}
           textAlignVertical="top"
         />
       </ScrollView>

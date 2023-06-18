@@ -100,7 +100,7 @@ export default function NotesScreen({navigation}: Props<'Notes'>) {
 
   return (
     <>
-      {notes.length === 0 && <Text style={{color: colors.gray}}>Пусто</Text>}
+      {notes.length === 0 && <Text style={{color: colors.fourth}}>Пусто</Text>}
       <ScrollView
         style={styles.ScrollView}
         contentContainerStyle={styles.ContentContainer}

@@ -63,8 +63,9 @@ export default function NoteItem({
               key={note.date}
               disableText={true}
               style={styles.CheckBox}
-              size={35}
+              size={30}
               fillColor={colors.third}
+              unfillColor={colors.background}
             />
           </Animated.View>
         ) : null}
@@ -77,17 +78,18 @@ const styles = StyleSheet.create({
   NoteItem: {
     marginBottom: 20,
     backgroundColor: colors.second,
-    height: 80,
+    height: 65,
     width: '90%',
-    borderRadius: 15,
+    borderRadius: 13,
+
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 6,
+      height: 1,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 5.62,
-    elevation: 3,
+    shadowOpacity: 0.16,
+    shadowRadius: 1.51,
+    elevation: 2,
   },
   Pressable: {
     flex: 1,
@@ -97,6 +99,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  Text: {color: '#fff', fontWeight: 'bold', fontSize: 16, width: '70%'},
+  Text: {color: '#fff', fontWeight: '400', fontSize: 17, width: '70%'},
   CheckBox: {margin: 0},
 });

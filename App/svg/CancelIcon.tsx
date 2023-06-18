@@ -7,7 +7,7 @@ interface Props {
   color?: string;
 }
 
-const CancelIcon: FC<Props> = ({size = 35, color = colors.gray}) => {
+const CancelIcon: FC<Props> = ({size = 35, color = colors.fourth}) => {
   return (
     <Svg viewBox="0 0 24 24" height={size} width={size} fill={color}>
       <G data-name="Layer 2">
